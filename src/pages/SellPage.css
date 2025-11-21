@@ -1,0 +1,100 @@
+/* src/pages/SellPage.css */
+.sell-page-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 32px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.sell-page-container h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.sell-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Re-using form styles */
+.form-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.form-group-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-group-row .form-group {
+  flex: 1; /* Make items in a row share space */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box; /* Important */
+  font-family: inherit; /* Make sure font is consistent */
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-group input[type="file"] {
+  padding: 8px;
+  border: 1px dashed #ccc;
+  background-color: #f9f9f9;
+}
+
+.sell-button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background-color: #28a745; /* Green for "sell" */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sell-button:hover {
+  background-color: #218838;
+}
+
+.sell-button:disabled {
+  background-color: #c0c0c0;
+}
+
+.sell-message {
+  text-align: center;
+  font-weight: 600;
+  margin-top: 16px;
+}
+.message-success {
+  color: green;
+}
+.message-error {
+  color: red;
+}

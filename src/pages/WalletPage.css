@@ -1,0 +1,142 @@
+/* src/pages/WalletPage.css */
+.wallet-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.wallet-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.wallet-header h2 {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+/* Balance Card */
+.balance-card {
+  background: linear-gradient(45deg, #007bff, #0056b3);
+  color: white;
+  padding: 32px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 20px rgba(0, 123, 255, 0.2);
+}
+
+.balance-card-label {
+  font-size: 1.1rem;
+  font-weight: 500;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.balance-card-amount {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin: 8px 0;
+}
+
+.wallet-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.wallet-button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button-add {
+  background-color: #ffffff;
+  color: #007bff;
+  border: none;
+}
+.button-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.button-withdraw {
+  background-color: transparent;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+}
+.button-withdraw:hover {
+  background-color: #ffffff;
+  color: #007bff;
+}
+
+/* Transaction History */
+.transaction-history h3 {
+  font-size: 1.75rem;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.transaction-info {
+  flex: 1;
+}
+
+.transaction-info p {
+  margin: 0;
+}
+
+.transaction-type {
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  margin-bottom: 4px;
+}
+
+.transaction-date {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.transaction-amount {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* Positive (credit/sale) */
+.amount-positive {
+  color: #2e7d32;
+}
+
+/* Negative (purchase/withdrawal) */
+.amount-negative {
+  color: #d84315;
+}
+
+.no-transactions-text {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 40px;
+  color: #777;
+}

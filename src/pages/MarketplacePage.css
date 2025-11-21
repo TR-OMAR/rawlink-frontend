@@ -1,0 +1,143 @@
+.marketplace-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+.marketplace-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.marketplace-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+  color: #1e293b;
+}
+
+.marketplace-header p {
+  font-size: 1.1rem;
+  color: #64748b;
+}
+
+/* --- Filters Styling --- */
+.filters-container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.search-box {
+  flex: 1;
+  min-width: 250px;
+  position: relative;
+}
+
+.filter-input {
+  width: 100%;
+  padding: 12px 16px 12px 40px; /* Space for icon */
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.filter-input:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.dropdowns-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.filter-select {
+  padding: 12px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background-color: white;
+  color: #334155;
+  cursor: pointer;
+  outline: none;
+  min-width: 160px;
+}
+.filter-select:focus {
+    border-color: #10b981;
+}
+
+/* --- Grid & States --- */
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.loading-text,
+.error-text {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 60px;
+  color: #64748b;
+}
+
+.no-listings-container {
+    text-align: center;
+    padding: 60px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 2px dashed #e2e8f0;
+}
+
+.no-listings-text {
+  font-size: 1.2rem;
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+.clear-filters-btn {
+    background: transparent;
+    border: 1px solid #10b981;
+    color: #10b981;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+.clear-filters-btn:hover {
+    background: #ecfdf5;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .filters-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .dropdowns-wrapper {
+        flex-direction: column;
+    }
+    .filter-select {
+        width: 100%;
+    }
+}
