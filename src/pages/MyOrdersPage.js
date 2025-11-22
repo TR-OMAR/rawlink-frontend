@@ -1,10 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api from '../services/api';
+import api, { BASE_URL } from '../services/api'; // Import BASE_URL
 import { useAuth } from '../context/AuthContext';
 import './MyOrdersPage.css';
-
-const DEFAULT_PLACEHOLDER_IMAGE = "http://127.0.0.1:8000/media/placeholder.png";
 
 const fetchOrders = async () => {
   const { data } = await api.get('/orders/');
@@ -37,7 +35,6 @@ function MyOrdersPage() {
   });
 
   const handleStatusUpdate = (id, newStatus) => {
-      // Confirm dialog matching the action
       const action = newStatus === 'shipped' ? 'Mark as Sold' : 'Confirm Receipt';
       if(window.confirm(`Are you sure you want to ${action}?`)) {
         statusMutation.mutate({ id, status: newStatus });
@@ -96,7 +93,14 @@ function MyOrdersPage() {
 }
 
 const OrderCard = ({ order, currentUser, viewRole, onUpdateStatus }) => {
-  const imageUrl = order.listing?.image ? order.listing.image : DEFAULT_PLACEHOLDER_IMAGE;
+  // Image handling logic
+  const getImageUrl = (img) => {
+    if (!img) return `${BASE_URL}/media/placeholder.png`;
+    if (img.startsWith('http')) return img;
+    return `${BASE_URL}${img}`;
+  };
+
+  const imageUrl = getImageUrl(order.listing?.image);
   const isSeller = String(currentUser.id) === String(order.vendor.id);
   const isBuyer = String(currentUser.id) === String(order.buyer.id);
 
@@ -107,7 +111,12 @@ const OrderCard = ({ order, currentUser, viewRole, onUpdateStatus }) => {
         <span className="order-date">{new Date(order.created_at).toLocaleDateString()}</span>
       </div>
       <div className="order-body">
-        <img src={imageUrl} className="order-card-image" alt="Item" onError={(e)=>{e.target.src=DEFAULT_PLACEHOLDER_IMAGE}} />
+        <img 
+            src={imageUrl} 
+            className="order-card-image" 
+            alt="Item" 
+            onError={(e)=>{e.target.src=`${BASE_URL}/media/placeholder.png`}} 
+        />
         <div className="order-card-info">
             <h3>{order.listing_title}</h3>
             <p>Qty: {order.quantity_bought} | Total: <span className="price">RM {parseFloat(order.total_price).toFixed(2)}</span></p>
@@ -117,14 +126,12 @@ const OrderCard = ({ order, currentUser, viewRole, onUpdateStatus }) => {
         </div>
       </div>
       <div className="order-actions">
-        {/* Seller Actions: "Mark as Sold" */}
         {isSeller && order.status === 'confirmed' && (
             <button className="btn-action btn-ship" onClick={() => onUpdateStatus(order.id, 'shipped')}>
                 Mark as Sold
             </button>
         )}
         
-        {/* Buyer Actions: "Confirm Receipt" */}
         {isBuyer && order.status === 'shipped' && (
             <button className="btn-action btn-receive" onClick={() => onUpdateStatus(order.id, 'completed')}>
                 Confirm Receipt

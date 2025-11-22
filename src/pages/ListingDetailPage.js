@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api from '../services/api';
+import api, { BASE_URL } from '../services/api'; // Import BASE_URL
 import { useAuth } from '../context/AuthContext';
 import './ListingDetailPage.css';
-
-const DEFAULT_PLACEHOLDER_IMAGE = "http://127.0.0.1:8000/media/placeholder.png";
 
 const fetchListingById = async ({ queryKey }) => {
   const [key, id] = queryKey;
@@ -31,7 +29,7 @@ function ListingDetailPage() {
     mutationFn: async () => {
       const { data } = await api.post('/orders/', {
         listing_id: listing.id,
-        quantity_bought: listing.quantity, // Buying FULL quantity
+        quantity_bought: listing.quantity,
         payment_method: paymentMethod,
       });
       return data;
@@ -78,7 +76,14 @@ function ListingDetailPage() {
   if (isLoading) return <div className="loading-text">Loading...</div>;
   if (isError) return <div className="error-text">Error loading listing.</div>;
 
-  const imageUrl = listing.image ? listing.image : DEFAULT_PLACEHOLDER_IMAGE;
+  // Helper to handle Image URL
+  const getImageUrl = (img) => {
+    if (!img) return `${BASE_URL}/media/placeholder.png`;
+    if (img.startsWith('http')) return img;
+    return `${BASE_URL}${img}`;
+  };
+
+  const imageUrl = getImageUrl(listing.image);
   const isOwner = user && String(user.id) === String(listing.vendor_id);
   const totalPrice = (parseFloat(listing.price_per_unit) * parseFloat(listing.quantity)).toFixed(2);
 
@@ -86,7 +91,12 @@ function ListingDetailPage() {
     <div className="listing-detail-container">
       <div className="listing-detail-layout">
         <div className="listing-image-gallery">
-          <img src={imageUrl} alt={listing.title} className="listing-detail-image" onError={(e)=>{e.target.src=DEFAULT_PLACEHOLDER_IMAGE}}/>
+          <img 
+            src={imageUrl} 
+            alt={listing.title} 
+            className="listing-detail-image" 
+            onError={(e)=>{e.target.src=`${BASE_URL}/media/placeholder.png`}}
+          />
         </div>
 
         <div className="listing-detail-info">
@@ -124,7 +134,6 @@ function ListingDetailPage() {
         <p>{listing.description || 'No description.'}</p>
       </div>
 
-      {/* --- CHECKOUT MODAL --- */}
       {showModal && (
         <div className="modal-overlay">
             <div className="modal-content checkout-modal">
@@ -159,7 +168,6 @@ function ListingDetailPage() {
                             <label className={`radio-label ${paymentMethod === 'cod' ? 'selected' : ''}`}>
                                 <div className="radio-info">
                                     <input type="radio" value="cod" checked={paymentMethod === 'cod'} onChange={(e)=>setPaymentMethod(e.target.value)} />
-                                    {/* Renamed to Cash */}
                                     <span className="radio-title">Cash</span>
                                 </div>
                                 <span className="radio-icon">💵</span>

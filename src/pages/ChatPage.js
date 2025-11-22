@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
-import api from '../services/api';
+import api, { BASE_URL } from '../services/api'; // Import BASE_URL
 import './ChatPage.css';
 
 const fetchConversations = async () => {
@@ -60,7 +60,7 @@ function ChatPage() {
             setMessageInput(`Hi, I'm interested in your listing: ${location.state.listingContext.title}`);
         }
 
-        // Check if vendor is already in our list (compare as strings)
+        // Check if vendor is already in our list
         const existingPartner = chatPartners.find(u => String(u.id) === String(vendorId));
         
         if (existingPartner) {
@@ -70,7 +70,6 @@ function ChatPage() {
           try {
             const newPartner = await fetchUserDetails(vendorId);
             setChatPartners(prev => {
-              // Prevent duplicates
               if (prev.find(u => String(u.id) === String(newPartner.id))) return prev;
               return [newPartner, ...prev];
             });
@@ -79,31 +78,35 @@ function ChatPage() {
             console.error("Could not fetch vendor details", error);
           }
         }
-        // Clear state so refresh doesn't re-trigger this
         window.history.replaceState({}, document.title);
       }
     };
 
-    // Run if we have loaded the list OR if we are starting fresh
     if (existingConversations || chatPartners.length === 0) {
        initChat();
     }
   }, [location.state, existingConversations]);
 
-  // 3. Load Chat History when a user is selected
+  // 3. Load Chat History
   const { data: historyMessages, isLoading: loadingHistory } = useQuery({
     queryKey: ['chatHistory', selectedUser?.id],
     queryFn: () => fetchChatHistory(selectedUser?.id),
-    enabled: !!selectedUser, // Only run if a user is selected
+    enabled: !!selectedUser,
   });
 
-  // 4. WebSocket Setup
+  // 4. WebSocket Setup (FIXED URL)
   useEffect(() => {
     if (!currentUser) return;
 
     const token = localStorage.getItem('access_token');
-    // Pass token in URL for authentication
-    const wsUrl = `ws://127.0.0.1:8000/ws/chat/?token=${token}`;
+    
+    // 🟢 IMPORTANT: Automatically switch to WSS if using HTTPS, WS if using HTTP
+    const wsProtocol = BASE_URL.startsWith('https') ? 'wss' : 'ws';
+    const wsHost = BASE_URL.replace(/^https?:\/\//, ''); // Remove http:// or https://
+    const wsUrl = `${wsProtocol}://${wsHost}/ws/chat/?token=${token}`;
+
+    console.log("Connecting to WebSocket:", wsUrl);
+
     const newSocket = new WebSocket(wsUrl);
 
     newSocket.onopen = () => console.log('WebSocket Connected');
@@ -112,7 +115,6 @@ function ChatPage() {
       const data = JSON.parse(event.data);
       setRealtimeMessages((prev) => [...prev, data]);
       
-      // Update Sidebar logic
       const otherUserId = String(data.sender_id) === String(currentUser.id) ? data.receiver_id : data.sender_id;
       
       setChatPartners(prevPartners => {
@@ -154,15 +156,13 @@ function ChatPage() {
 
     socket.send(JSON.stringify(messagePayload));
     setMessageInput('');
-    setListingContext(null); // Clear context after first message
+    setListingContext(null);
     
-    // Force refresh conversation list to ensure persistence
     setTimeout(() => {
         queryClient.invalidateQueries(['conversations']);
     }, 1000);
   };
 
-  // Merge Database History + Realtime Messages
   const displayMessages = [
     ...(historyMessages || []), 
     ...realtimeMessages.filter(msg => 
@@ -199,7 +199,6 @@ function ChatPage() {
         </div>
       </div>
 
-      {/* Chat Window */}
       <div className="chat-window">
         {selectedUser ? (
           <>
@@ -234,7 +233,6 @@ function ChatPage() {
           </>
         ) : (
           <div className="no-chat-selected">
-             {/* SVG Icon */}
              <svg style={{width: '60px', height: '60px', color: '#ccc', marginBottom: '20px'}} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
              <h3>Select a conversation</h3>
           </div>
