@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from '../services/api'; // Import BASE_URL
+import localPlaceholder from '../assets/placeholder.webp';
 import './ListingCard.css';
 
 function ListingCard({ listing }) {
@@ -9,9 +10,12 @@ function ListingCard({ listing }) {
   // 1. Construct the Image URL dynamically
   // If image exists, use it. If not, use the backend placeholder.
   const getImageUrl = (img) => {
-      if (!img) return `${BASE_URL}/media/placeholder.png`;
-      // If the backend returns a full URL (http...), use it. Otherwise, prepend BASE_URL.
+      if (!img) return localPlaceholder;
+      
+      // If backend gives a full URL (e.g., Cloudinary/S3), use it
       if (img.startsWith('http')) return img;
+      
+      // Otherwise, append BASE_URL
       return `${BASE_URL}${img}`;
   };
 
@@ -24,9 +28,10 @@ function ListingCard({ listing }) {
           src={imageUrl} 
           alt={title} 
           className="listing-image" 
+          // 3. If the real image fails (404), fall back to local placeholder
           onError={(e) => { 
             e.target.onerror = null; 
-            e.target.src = `${BASE_URL}/media/placeholder.png`;
+            e.target.src = localPlaceholder; 
           }}
         />
       </div>
