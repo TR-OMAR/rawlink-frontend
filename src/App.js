@@ -2,6 +2,9 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import './App.css';
+import AboutPage from './pages/AboutPage'; // <--- Import this
+import SustainabilityPage from './pages/SustainabilityPage'; // <--- Import this
+
 
 // Import Pages
 import HomePage from './pages/HomePage';
