@@ -2,7 +2,8 @@
   background-color: #0f172a; /* Dark Slate */
   color: #94a3b8;
   padding: 60px 20px 20px;
-  margin-top: 60px;
+  margin-top: auto;
+  border-top: 1px solid #e2e8f0;
 }
 
 .footer-content {
@@ -21,11 +22,17 @@
   margin-bottom: 20px;
 }
 
+/* Brand & Logo */
 .footer-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 15px;
+}
+
+.brand-logo-img {
+  height: 40px; /* Adjust based on your SVG aspect ratio */
+  width: auto;
 }
 
 .footer-brand h3 {
@@ -34,21 +41,31 @@
   margin: 0;
 }
 
-.footer-brand .brand-icon {
-    font-size: 1.5rem;
-}
-
 .footer-desc {
   line-height: 1.6;
   font-size: 0.95rem;
   margin-bottom: 20px;
+  max-width: 300px;
 }
 
+/* Social Icons */
 .social-links {
     display: flex;
-    gap: 15px;
-    font-size: 1.2rem;
-    cursor: pointer;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.social-icon {
+    width: 24px;
+    height: 24px;
+    /* Filter makes black icons white/gray to match theme */
+    filter: invert(63%) sepia(11%) saturate(403%) hue-rotate(174deg) brightness(93%) contrast(89%);
+    transition: filter 0.2s;
+}
+
+.social-icon:hover {
+    /* Emerald Green on Hover */
+    filter: invert(63%) sepia(63%) saturate(456%) hue-rotate(106deg) brightness(91%) contrast(93%);
 }
 
 .footer-links {
@@ -71,27 +88,33 @@
   color: #10b981;
 }
 
-/* Payment Badges */
+/* Payment Logos */
 .payment-methods {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
+  align-items: center;
   margin-bottom: 15px;
+  background: rgba(255,255,255,0.05); /* Subtle background container */
+  padding: 10px;
+  border-radius: 8px;
 }
 
-.pay-badge {
-  background: #1e293b;
-  color: #fff;
-  padding: 6px 10px;
+.pay-logo {
+  height: 24px; /* Standardized height */
+  width: auto;
+  object-fit: contain;
+  background: white; /* Logos often need white bg to be visible */
+  padding: 2px 4px;
   border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  border: 1px solid #334155;
 }
 
 .secure-note {
     font-size: 0.85rem;
     color: #10b981;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .footer-bottom {
@@ -114,14 +137,23 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .footer-content {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr; /* 2x2 Grid on tablet */
     gap: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-content {
+    grid-template-columns: 1fr; /* 1 column on mobile */
+    text-align: center;
+  }
+  .footer-brand, .social-links, .payment-methods, .secure-note, .footer-bottom {
+      justify-content: center;
   }
   .footer-bottom {
       flex-direction: column;
       gap: 15px;
-      text-align: center;
   }
 }
