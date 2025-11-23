@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
+import heroBg from '../assets/hero-bg.png'; // Import the file
 
 const Dashboard = ({ user }) => {
   const greetingName = (user.displayName || user.username || 'User').split(' ')[0];
@@ -56,7 +57,12 @@ const WelcomePage = () => {
   return (
     <div className="landing-page">
         {/* Hero Section */}
-        <section className="lp-hero">
+        <section className="lp-hero" style={{ 
+        background: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)), url(${heroBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+    }}>
             <div className="lp-hero-content">
                 <h1>Turn Waste into <span className="text-gradient">Value</span></h1>
                 <p>The premier B2B marketplace connecting industrial waste producers with recyclers. Efficient, transparent, and sustainable.</p>
@@ -67,7 +73,6 @@ const WelcomePage = () => {
             </div>
             <div className="lp-hero-image">
                 {/* Placeholder for a nice illustration */}
-                <div className="illustration-box">🌱</div>
             </div>
         </section>
 
