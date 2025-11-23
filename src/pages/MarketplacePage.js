@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../services/api';
 import ListingCard from '../components/ListingCard';
-import { COUNTRIES } from '../utils/countries'; // <--- IMPORT THIS
+import { COUNTRIES } from '../utils/countries'; // Imported as COUNTRIES
 import './MarketplacePage.css';
 
 const fetchListings = async ({ queryKey }) => {
@@ -18,10 +18,7 @@ const fetchListings = async ({ queryKey }) => {
   return data;
 };
 
-// ... Remove the local 'countries' array since we imported it ...
-
 function MarketplacePage() {
-  // ... Keep existing state logic (searchTerm, selectedCountry, etc.) ...
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -40,7 +37,7 @@ function MarketplacePage() {
     return () => clearTimeout(timer);
   }, [cityFilter]);
 
-  const { data: listings, isLoading, isError } = useQuery({
+  const { data: listings, isLoading } = useQuery({
     queryKey: ['listings', { 
         search: debouncedSearch, 
         category: selectedCategory, 
@@ -87,7 +84,7 @@ function MarketplacePage() {
             
             <select value={selectedCountry} onChange={(e) => setSelectedCountry(e.target.value)} className="filter-select">
                 <option value="">All Countries</option>
-                {/* Use imported COUNTRIES */}
+                {/* FIX: Used COUNTRIES (uppercase) to match the import */}
                 {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
             </select>
         </div>

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from '../services/api';
-import { getCountryName } from '../utils/countries'; // <--- Import Helper
-import localPlaceholder from '../assets/placeholder.webp'; // (Ensure extension matches your file)
+import { getCountryName } from '../utils/countries';
+// Switched to .png to be safe, ensure this file exists in src/assets/
+import localPlaceholder from '../assets/placeholder.png'; 
 import './ListingCard.css';
 
 function ListingCard({ listing }) {
@@ -16,12 +17,15 @@ function ListingCard({ listing }) {
 
   const imageUrl = getImageUrl(image);
 
-  // LOGIC CHANGE: Display City, Country Name
+  // LOGIC: 
+  // 1. If City & Country exist -> "Kuala Lumpur, Malaysia"
+  // 2. If only Country exists -> "Malaysia"
+  // 3. If neither -> Fallback to "location" (e.g. "Islamabad...")
   const displayLocation = () => {
       const countryName = getCountryName(country);
       if (city && countryName) return `${city}, ${countryName}`;
       if (countryName) return countryName;
-      return location; // Fallback to old location field if data missing
+      return location || "Unknown Location";
   };
 
   return (
@@ -44,12 +48,10 @@ function ListingCard({ listing }) {
           <span className="listing-price-unit"> / {unit}</span>
         </p>
         <p className="listing-info">
-          {/* Map Pin Icon */}
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
             <circle cx="12" cy="10" r="3"></circle>
           </svg>
-          {/* NEW: Use the City, Country function */}
           {displayLocation()}
         </p>
       </div>
