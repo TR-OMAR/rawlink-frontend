@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from '../services/api';
 import { getCountryName } from '../utils/countries';
 // Switched to .png to be safe, ensure this file exists in src/assets/
-import localPlaceholder from '../assets/placeholder.png'; 
+import localPlaceholder from '../assets/placeholder.webp'; 
 import './ListingCard.css';
 
 function ListingCard({ listing }) {
