@@ -222,7 +222,7 @@
   /* NEW: Professional Background */
   background: 
     linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)),
-    url('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=2070&auto=format&fit=crop'); 
+    url('/assets/hero-bg.png'); /* Reference from public folder */
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
