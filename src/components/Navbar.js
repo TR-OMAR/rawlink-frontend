@@ -1,19 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
 function Navbar() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const location = useLocation();
 
-  // Mock Counters
-  const messageCount = 3;
-  const orderCount = 2;
+  // Mock Counters (Replace with real data from context/API if available)
+  const messageCount = 0; 
+  const orderCount = 0;
 
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -24,10 +26,16 @@ function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Close menus on route change
   useEffect(() => {
     setIsDropdownOpen(false);
     setIsMobileMenuOpen(false);
   }, [location]);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const getNavName = () => {
       const name = user?.displayName || user?.username || 'User';
@@ -43,17 +51,19 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         
-        {/* 1. LEFT: Logo Image from Public Folder */}
-        {/* Ensure you have a file named 'logo.png' in your public folder */}
+        {/* 1. LEFT: Logo Image */}
         <Link to="/" className="nav-logo">
           <img src="/logo.svg" alt="RawLink Logo" className="nav-logo-img" />
           <span>RawLink</span>
         </Link>
 
-        {/* 2. CENTER: Main Links */}
-        <div className="nav-center">
+        {/* 2. CENTER: Main Links (Hidden on Mobile) */}
+        <div className={`nav-center ${isMobileMenuOpen ? 'mobile-active' : ''}`}>
           <Link to="/" className="nav-link-main">Home</Link>
           <Link to="/marketplace" className="nav-link-main">Marketplace</Link>
+          <Link to="/about" className="nav-link-main">About Us</Link>
+          <Link to="/sustainability" className="nav-link-main">Sustainability</Link>
+          
           {user && (
             <Link to="/sell" className="nav-link-main nav-sell-btn">
               SELL
@@ -92,25 +102,28 @@ function Navbar() {
                   <div className="dropdown-menu">
                       <div className="dropdown-header">
                         <strong>{user.displayName || user.username}</strong>
-                        <span>{user.role}</span>
+                        <span>{user.role || 'Member'}</span>
                       </div>
                       <Link to="/profile" className="dropdown-item">Profile</Link>
                       <Link to="/wallet" className="dropdown-item">Wallet</Link>
                       <div className="dropdown-divider"></div>
-                      <button onClick={logout} className="dropdown-item logout-item">Logout</button>
+                      <button onClick={handleLogout} className="dropdown-item logout-item">Logout</button>
                   </div>
                 )}
               </div>
             </>
           ) : (
-            <>
+            <div className="auth-buttons-group">
               <Link to="/login" className="nav-link-main">Login</Link>
-              <Link to="/register" className="btn-primary" style={{padding: '10px 24px', borderRadius: '30px'}}>Sign Up</Link>
-            </>
+              <Link to="/register" className="btn-primary">Sign Up</Link>
+            </div>
           )}
         </div>
         
-        <button className="mobile-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>☰</button>
+        {/* Mobile Toggle Button */}
+        <button className="mobile-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            {isMobileMenuOpen ? '✕' : '☰'}
+        </button>
       </div>
     </nav>
   );

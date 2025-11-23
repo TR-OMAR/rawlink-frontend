@@ -48,6 +48,9 @@ function AppRoutes() {
           <Route path="/marketplace" element={<MarketplacePage />} />
           <Route path="/listing/:id" element={<ListingDetailPage />} />
 
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/sustainability" element={<SustainabilityPage />} />
+
           {/* --- Auth Routes (Redirect to Home if already logged in) --- */}
           <Route
             path="/login"

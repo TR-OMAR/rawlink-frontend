@@ -1,0 +1,147 @@
+/* src/pages/SustainabilityPage.css */
+
+.sustainability-container {
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+.sus-header {
+  background-color: #ecfdf5; /* Light Mint */
+  padding: 80px 20px;
+  text-align: center;
+  border-bottom: 1px solid #d1fae5;
+}
+
+.sus-header h1 {
+  color: #065f46; /* Dark Green */
+  font-size: 3rem;
+  margin-bottom: 16px;
+  font-weight: 800;
+}
+
+.sus-header p {
+  font-size: 1.25rem;
+  color: #047857;
+}
+
+/* Impact Stats */
+.impact-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1000px;
+  margin: -40px auto 60px; /* Pull up over the header */
+  padding: 0 20px;
+}
+
+.stat-box {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.stat-desc {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Color Themes for Stats */
+.stat-box.green .stat-number { color: #10b981; }
+.stat-box.blue .stat-number { color: #3b82f6; }
+.stat-box.yellow .stat-number { color: #f59e0b; }
+
+/* Content Section */
+.sus-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  max-width: 1100px;
+  margin: 0 auto 80px;
+  padding: 0 20px;
+  align-items: center;
+}
+
+.sus-text h2 {
+  font-size: 2rem;
+  color: #1e293b;
+  margin-bottom: 20px;
+}
+
+.sus-text p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #475569;
+  margin-bottom: 20px;
+}
+
+.sus-list {
+  list-style: none;
+  padding: 0;
+}
+
+.sus-list li {
+  margin-bottom: 12px;
+  font-size: 1.05rem;
+  color: #334155;
+  padding-left: 24px;
+  position: relative;
+}
+
+.sus-list li::before {
+  content: '🌱';
+  position: absolute;
+  left: 0;
+  top: 2px;
+}
+
+.infographic-placeholder {
+  background-color: #f1f5f9;
+  height: 300px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #94a3b8;
+  border: 2px dashed #cbd5e1;
+}
+
+/* CTA */
+.sus-cta {
+  text-align: center;
+  padding: 80px 20px;
+  background-color: #0f172a;
+  color: white;
+}
+
+.sus-cta h2 {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+  color: #34d399;
+}
+
+.sus-cta p {
+  font-size: 1.2rem;
+  color: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+  .sus-content {
+    grid-template-columns: 1fr;
+  }
+  .sus-header h1 { font-size: 2.2rem; }
+}

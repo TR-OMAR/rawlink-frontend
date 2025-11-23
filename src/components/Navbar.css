@@ -16,6 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 
 /* --- Logo Styling --- */
@@ -30,9 +31,8 @@
   letter-spacing: -0.5px;
 }
 
-/* New Image Class to keep logo size consistent */
 .nav-logo-img {
-  height: 40px; /* Adjust this height based on your logo aspect ratio */
+  height: 40px; 
   width: auto;
   object-fit: contain;
 }
@@ -41,7 +41,7 @@
 .nav-center {
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 32px;
 }
 
 .nav-link-main {
@@ -74,6 +74,12 @@
   gap: 16px;
 }
 
+.auth-buttons-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 /* --- Icon Buttons --- */
 .nav-icon-btn {
   position: relative;
@@ -96,28 +102,27 @@
 }
 
 .nav-svg {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   stroke-width: 2px;
 }
 
 /* Notification Badge */
 .nav-badge {
   position: absolute;
-  top: -2px;
-  right: -2px;
+  top: 4px;
+  right: 4px;
   background: #ef4444;
   color: white;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  min-width: 20px;
-  height: 20px;
-  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 2px solid white;
-  box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);
 }
 
 /* --- User Dropdown --- */
@@ -213,19 +218,40 @@
 .btn-primary {
   background: #10b981;
   color: white;
-  padding: 8px 20px;
+  padding: 10px 24px;
   border-radius: 50px;
-  font-weight: 600;
+  font-weight: 700;
+  text-decoration: none;
   transition: background 0.2s;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
 }
 .btn-primary:hover {
   background: #059669;
   color: white;
 }
 
-.mobile-toggle { display: none; font-size: 1.5rem; background: none; border: none; cursor: pointer; }
+.mobile-toggle { display: none; font-size: 1.5rem; background: none; border: none; cursor: pointer; color: #334155; }
 
-@media (max-width: 768px) {
-  .nav-center, .nav-right { display: none; } 
+/* Mobile Responsive */
+@media (max-width: 900px) {
+  .nav-center {
+    display: none; /* Hidden by default on mobile */
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    padding: 24px;
+    border-bottom: 1px solid #f1f5f9;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  }
+
+  .nav-center.mobile-active {
+    display: flex;
+  }
+
+  .nav-greeting { display: none; } /* Hide name on tablet/mobile to save space */
+  
   .mobile-toggle { display: block; }
 }
