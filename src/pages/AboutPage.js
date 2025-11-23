@@ -57,7 +57,7 @@ const AboutPage = () => {
           {/* Add your own team members here */}
           <div className="team-member">
             <div className="member-avatar">👨‍💻</div>
-            <h3>Abdul</h3>
+            <h3>Omar</h3>
             <p>Founder & Lead Developer</p>
           </div>
           <div className="team-member">

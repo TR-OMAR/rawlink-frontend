@@ -44,7 +44,7 @@ const SustainabilityPage = () => {
         <div className="sus-image">
            {/* You can replace this with an infographic later */}
            <div className="infographic-placeholder">
-             ♻️ Circular Loop
+             ♻️ 
            </div>
         </div>
       </section>
