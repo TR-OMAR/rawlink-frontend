@@ -222,7 +222,7 @@
   /* NEW: Professional Background */
   background: 
     linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)),
-    url('/assets/hero-bg.png'); /* Reference from public folder */
+    url('../assets/hero-bg.png'); /* Reference from public folder */
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

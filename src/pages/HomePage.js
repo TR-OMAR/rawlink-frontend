@@ -2,7 +2,8 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
-import heroBg from '../assets/hero-bg.png'; // Import the file
+
+// REMOVED: import heroBg from '../assets/hero-bg.png'; 
 
 const Dashboard = ({ user }) => {
   const greetingName = (user.displayName || user.username || 'User').split(' ')[0];
@@ -57,12 +58,11 @@ const WelcomePage = () => {
   return (
     <div className="landing-page">
         {/* Hero Section */}
-        <section className="lp-hero" style={{ 
-        background: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)), url(${heroBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-    }}>
+        {/* FIX: Removed inline style that used local image.
+            The CSS class .lp-hero in HomePage.css now handles the background image 
+            using a reliable URL. This fixes the build error.
+        */}
+        <section className="lp-hero">
             <div className="lp-hero-content">
                 <h1>Turn Waste into <span className="text-gradient">Value</span></h1>
                 <p>The premier B2B marketplace connecting industrial waste producers with recyclers. Efficient, transparent, and sustainable.</p>
