@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from '../services/api';
 import { getCountryName } from '../utils/countries';
-// Switched to .png to be safe, ensure this file exists in src/assets/
+// Make sure this matches your actual file extension (.png or .webp)
 import localPlaceholder from '../assets/placeholder.webp'; 
 import './ListingCard.css';
 
@@ -17,14 +17,23 @@ function ListingCard({ listing }) {
 
   const imageUrl = getImageUrl(image);
 
-  // LOGIC: 
-  // 1. If City & Country exist -> "Kuala Lumpur, Malaysia"
-  // 2. If only Country exists -> "Malaysia"
-  // 3. If neither -> Fallback to "location" (e.g. "Islamabad...")
+  // LOGIC UPDATE:
+  // We want to prioritize showing "City, Country" for a cleaner card look.
+  // If data is missing (old items), we fall back to the raw 'location' string.
   const displayLocation = () => {
       const countryName = getCountryName(country);
-      if (city && countryName) return `${city}, ${countryName}`;
-      if (countryName) return countryName;
+      
+      // If we have both city and country (Ideal for new items)
+      if (city && countryName) {
+          return `${city}, ${countryName}`;
+      }
+      
+      // If we only have country
+      if (countryName) {
+          return countryName;
+      }
+
+      // Fallback for old items that only have the 'location' string
       return location || "Unknown Location";
   };
 

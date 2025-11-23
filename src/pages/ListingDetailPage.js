@@ -1,41 +1,23 @@
-// components/ListingComponents.jsx
 import React, { useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api, { BASE_URL } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import api, { BASE_URL } from '../services/api'; 
 import { getCountryName } from '../utils/countries';
-import localPlaceholder from '../assets/placeholder.webp';
+import { useAuth } from '../context/AuthContext';
 import './ListingDetailPage.css';
-import '../components/ListingCard.css';
 
-/**
- * Shared helper to resolve image URLs.
- * - If `img` is falsy, optionally return a local placeholder (pass useLocalFallback = true)
- * - If `img` already looks like an absolute URL, return it as-is
- * - Otherwise prefix with BASE_URL
- */
-const resolveImageUrl = (img, { useLocalFallback = false } = {}) => {
-  if (!img) return useLocalFallback ? localPlaceholder : `${BASE_URL}/media/placeholder.png`;
-  if (typeof img === 'string' && img.startsWith('http')) return img;
-  return `${BASE_URL}${img}`;
-};
-
-/* ============================
-   ListingDetailPage Component
-   ============================ */
 const fetchListingById = async ({ queryKey }) => {
-  const [, id] = queryKey;
+  const [key, id] = queryKey;
   const { data } = await api.get(`/listings/${id}/`);
   return data;
 };
 
-export function ListingDetailPage() {
+function ListingDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user } = useAuth();
-
+  
   const [showModal, setShowModal] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('wallet');
 
@@ -67,7 +49,7 @@ export function ListingDetailPage() {
 
   const handleBuyClick = () => {
     if (!user) {
-      alert('Please log in to buy.');
+      alert("Please log in to buy.");
       navigate('/login');
       return;
     }
@@ -80,22 +62,28 @@ export function ListingDetailPage() {
 
   const handleChat = () => {
     if (!user) {
-      alert('Please log in to chat.');
+      alert("Please log in to chat.");
       navigate('/login');
       return;
     }
-    navigate('/chat', {
-      state: {
-        startChatWith: listing.vendor_id,
-        listingContext: { id: listing.id, title: listing.title },
-      },
+    navigate('/chat', { 
+        state: { 
+            startChatWith: listing.vendor_id,
+            listingContext: { id: listing.id, title: listing.title }
+        } 
     });
   };
 
   if (isLoading) return <div className="loading-text">Loading...</div>;
-  if (isError || !listing) return <div className="error-text">Error loading listing.</div>;
+  if (isError) return <div className="error-text">Error loading listing.</div>;
 
-  const imageUrl = resolveImageUrl(listing.image, { useLocalFallback: false });
+  const getImageUrl = (img) => {
+    if (!img) return `${BASE_URL}/media/placeholder.png`;
+    if (img.startsWith('http')) return img;
+    return `${BASE_URL}${img}`;
+  };
+
+  const imageUrl = getImageUrl(listing.image);
   const isOwner = user && String(user.id) === String(listing.vendor_id);
   const totalPrice = (parseFloat(listing.price_per_unit) * parseFloat(listing.quantity)).toFixed(2);
 
@@ -103,42 +91,59 @@ export function ListingDetailPage() {
     <div className="listing-detail-container">
       <div className="listing-detail-layout">
         <div className="listing-image-gallery">
-          <img
-            src={imageUrl}
-            alt={listing.title}
-            className="listing-detail-image"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = `${BASE_URL}/media/placeholder.png`;
-            }}
+          <img 
+            src={imageUrl} 
+            alt={listing.title} 
+            className="listing-detail-image" 
+            onError={(e)=>{e.target.src=`${BASE_URL}/media/placeholder.png`}}
           />
         </div>
 
         <div className="listing-detail-info">
           <h1>{listing.title}</h1>
           <p className="listing-detail-price">
-            RM {parseFloat(listing.price_per_unit).toFixed(2)}
-            <span> / {listing.unit}</span>
+            RM {parseFloat(listing.price_per_unit).toFixed(2)}<span> / {listing.unit}</span>
           </p>
 
           <div className="listing-meta-grid">
             <div className="meta-item">
-              <span className="meta-item-label">Category</span>
-              <span className="meta-item-value">{listing.category}</span>
+                <span className="meta-item-label">Category</span>
+                <span className="meta-item-value">{listing.category}</span>
             </div>
             <div className="meta-item">
-              <span className="meta-item-label">Available</span>
-              <span className="meta-item-value">
-                {listing.quantity} {listing.unit}
-              </span>
+                <span className="meta-item-label">Available</span>
+                <span className="meta-item-value">{listing.quantity} {listing.unit}</span>
             </div>
+            
+            {/* --- UPDATED LOCATION DISPLAY --- */}
+            {/* Shows separate fields for Country, City, and specific Location */}
+            
             <div className="meta-item">
-              <span className="meta-item-label">Location</span>
-              <span className="meta-item-value">{listing.location}</span>
+                <span className="meta-item-label">Country</span>
+                <span className="meta-item-value">
+                    {getCountryName(listing.country) || 'Not specified'}
+                </span>
             </div>
+
             <div className="meta-item">
-              <span className="meta-item-label">Vendor</span>
-              <span className="meta-item-value">{listing.vendor}</span>
+                <span className="meta-item-label">City</span>
+                <span className="meta-item-value">
+                    {listing.city || 'Not specified'}
+                </span>
+            </div>
+
+            {/* Full Address / Specific Location */}
+            <div className="meta-item" style={{gridColumn: 'span 2'}}>
+                <span className="meta-item-label">Full Address / Location</span>
+                <span className="meta-item-value">
+                    {listing.location || 'Not specified'}
+                </span>
+            </div>
+            {/* -------------------------------- */}
+
+            <div className="meta-item">
+                <span className="meta-item-label">Vendor</span>
+                <span className="meta-item-value">{listing.vendor}</span>
             </div>
           </div>
 
@@ -146,10 +151,8 @@ export function ListingDetailPage() {
             <div className="owner-badge">You listed this item.</div>
           ) : (
             <div className="buy-button-container">
-              <button className="chat-button" onClick={handleChat}>
-                Chat with Vendor
-              </button>
-              <button
+              <button className="chat-button" onClick={handleChat}>Chat with Vendor</button>
+              <button 
                 className="buy-button"
                 onClick={handleBuyClick}
                 disabled={listing.status !== 'available' || listing.quantity <= 0}
@@ -160,125 +163,68 @@ export function ListingDetailPage() {
           )}
         </div>
       </div>
-
+      
       <div className="listing-description">
         <h3>Description</h3>
         <p>{listing.description || 'No description.'}</p>
       </div>
 
+      {/* Modal remains unchanged... */}
       {showModal && (
         <div className="modal-overlay">
-          <div className="modal-content checkout-modal">
-            <div className="modal-header">
-              <h3>Checkout</h3>
-              <button className="close-modal" onClick={() => setShowModal(false)}>
-                ×
-              </button>
-            </div>
-
-            <div className="checkout-body">
-              <div className="form-group">
-                <label className="section-label">Item</label>
-                <div className="checkout-item-title">{listing.title}</div>
-              </div>
-
-              <div className="form-group">
-                <label className="section-label">Quantity (Fixed)</label>
-                <div className="fixed-qty-display">
-                  {listing.quantity} {listing.unit}
+            <div className="modal-content checkout-modal">
+                <div className="modal-header">
+                    <h3>Checkout</h3>
+                    <button className="close-modal" onClick={() => setShowModal(false)}>×</button>
                 </div>
-              </div>
+                
+                <div className="checkout-body">
+                    <div className="form-group">
+                        <label className="section-label">Item</label>
+                        <div className="checkout-item-title">{listing.title}</div>
+                    </div>
 
-              <div className="form-group">
-                <label className="section-label">Payment Method</label>
-                <div className="radio-group">
-                  <label className={`radio-label ${paymentMethod === 'wallet' ? 'selected' : ''}`}>
-                    <div className="radio-info">
-                      <input
-                        type="radio"
-                        value="wallet"
-                        checked={paymentMethod === 'wallet'}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                      />
-                      <span className="radio-title">RawLink Wallet</span>
+                    <div className="form-group">
+                        <label className="section-label">Quantity (Fixed)</label>
+                        <div className="fixed-qty-display">
+                            {listing.quantity} {listing.unit}
+                        </div>
                     </div>
-                    <span className="radio-icon">💳</span>
-                  </label>
-                  <label className={`radio-label ${paymentMethod === 'cod' ? 'selected' : ''}`}>
-                    <div className="radio-info">
-                      <input
-                        type="radio"
-                        value="cod"
-                        checked={paymentMethod === 'cod'}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                      />
-                      <span className="radio-title">Cash</span>
+
+                    <div className="form-group">
+                        <label className="section-label">Payment Method</label>
+                        <div className="radio-group">
+                            <label className={`radio-label ${paymentMethod === 'wallet' ? 'selected' : ''}`}>
+                                <div className="radio-info">
+                                    <input type="radio" value="wallet" checked={paymentMethod === 'wallet'} onChange={(e)=>setPaymentMethod(e.target.value)} />
+                                    <span className="radio-title">RawLink Wallet</span>
+                                </div>
+                                <span className="radio-icon">💳</span>
+                            </label>
+                            <label className={`radio-label ${paymentMethod === 'cod' ? 'selected' : ''}`}>
+                                <div className="radio-info">
+                                    <input type="radio" value="cod" checked={paymentMethod === 'cod'} onChange={(e)=>setPaymentMethod(e.target.value)} />
+                                    <span className="radio-title">Cash</span>
+                                </div>
+                                <span className="radio-icon">💵</span>
+                            </label>
+                        </div>
                     </div>
-                    <span className="radio-icon">💵</span>
-                  </label>
                 </div>
-              </div>
-            </div>
 
-            <div className="checkout-footer">
-              <div className="total-display">
-                <span>Total to Pay:</span>
-                <span className="total-price">RM {totalPrice}</span>
-              </div>
-              <button className="btn-confirm-order" onClick={confirmOrder} disabled={createOrderMutation.isLoading}>
-                {createOrderMutation.isLoading ? 'Processing...' : 'Confirm Purchase'}
-              </button>
+                <div className="checkout-footer">
+                    <div className="total-display">
+                        <span>Total to Pay:</span>
+                        <span className="total-price">RM {totalPrice}</span>
+                    </div>
+                    <button className="btn-confirm-order" onClick={confirmOrder} disabled={createOrderMutation.isLoading}>
+                        {createOrderMutation.isLoading ? 'Processing...' : 'Confirm Purchase'}
+                    </button>
+                </div>
             </div>
-          </div>
         </div>
       )}
     </div>
-  );
-}
-
-/* ============================
-   ListingCard Component
-   ============================ */
-export function ListingCard({ listing }) {
-  const { id, title, price_per_unit, unit, location, city, country, image } = listing;
-
-  const imageUrl = resolveImageUrl(image, { useLocalFallback: true });
-
-  const displayLocation = () => {
-    const countryName = getCountryName(country);
-    if (city && countryName) return `${city}, ${countryName}`;
-    if (countryName) return countryName;
-    return location || '';
-  };
-
-  return (
-    <Link to={`/listing/${id}`} className="listing-card">
-      <div className="listing-image-wrapper">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="listing-image"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = localPlaceholder;
-          }}
-        />
-      </div>
-      <div className="listing-content">
-        <h3 className="listing-title">{title}</h3>
-        <p className="listing-price">
-          RM {parseFloat(price_per_unit).toFixed(2)}
-          <span className="listing-price-unit"> / {unit}</span>
-        </p>
-        <p className="listing-info">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-            <circle cx="12" cy="10" r="3"></circle>
-          </svg>
-          {displayLocation()}
-        </p>
-      </div>
-    </Link>
   );
 }
 
