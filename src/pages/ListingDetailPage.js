@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { getCountryName } from '../utils/countries';
 import localPlaceholder from '../assets/placeholder.webp';
 import './ListingDetailPage.css';
-import './ListingCard.css';
+import '../components/ListingCard.css';
 
 /**
  * Shared helper to resolve image URLs.
