@@ -217,8 +217,15 @@
   align-items: center;
   justify-content: space-between;
   padding: 80px 5%;
-  background: white;
   min-height: 85vh; /* Almost full viewport */
+  
+  /* NEW: Professional Background */
+  background: 
+    linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)),
+    url('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=2070&auto=format&fit=crop'); 
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .lp-hero-content {
@@ -231,6 +238,7 @@
   line-height: 1.1;
   margin-bottom: 24px;
   color: #0f172a;
+  text-shadow: 0 2px 4px rgba(255,255,255,0.5);
 }
 
 .text-gradient {
@@ -241,9 +249,10 @@
 
 .lp-hero-content p {
   font-size: 1.25rem;
-  color: #64748b;
+  color: #334155; /* Darkened for readability over image */
   margin-bottom: 40px;
   line-height: 1.6;
+  font-weight: 500;
 }
 
 .lp-buttons {

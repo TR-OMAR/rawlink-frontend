@@ -14,7 +14,10 @@ import MyOrdersPage from './pages/MyOrdersPage';
 import WalletPage from './pages/WalletPage';
 import ProfilePage from './pages/ProfilePage';
 import ChatPage from './pages/ChatPage';
+
+// Import Components
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 /**
  * Protects routes that require login.
@@ -34,9 +37,11 @@ function AppRoutes() {
   const { user } = useAuth();
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar />
-      <div className="container-fluid"> {/* Use fluid or remove class if handled by pages */}
+      
+      {/* Main Content Area - flex: 1 pushes footer down */}
+      <div className="container-fluid" style={{ flex: '1', paddingBottom: '40px' }}>
         <Routes>
           {/* --- Public Routes --- */}
           <Route path="/" element={<HomePage />} />
@@ -79,7 +84,9 @@ function AppRoutes() {
           <Route path="*" element={<div>404 - Page Not Found</div>} />
         </Routes>
       </div>
-    </>
+
+      <Footer />
+    </div>
   );
 }
 

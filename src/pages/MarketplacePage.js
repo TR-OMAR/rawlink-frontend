@@ -1,8 +1,8 @@
-// ... imports ...
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../services/api';
 import ListingCard from '../components/ListingCard';
+import { COUNTRIES } from '../utils/countries'; // <--- IMPORT THIS
 import './MarketplacePage.css';
 
 const fetchListings = async ({ queryKey }) => {
@@ -10,34 +10,18 @@ const fetchListings = async ({ queryKey }) => {
   const params = new URLSearchParams();
   if (filters.search) params.append('search', filters.search);
   if (filters.category) params.append('category', filters.category);
-  if (filters.country) params.append('country', filters.country); // New
-  if (filters.city) params.append('city', filters.city); // New
+  if (filters.country) params.append('country', filters.country);
+  if (filters.city) params.append('city', filters.city);
   if (filters.sort) params.append('ordering', filters.sort);
 
   const { data } = await api.get(`/listings/?${params.toString()}`);
   return data;
 };
 
-const countries = [
-    { code: '', name: 'All Countries' },
-    { code: 'MY', name: 'Malaysia' },
-    { code: 'SG', name: 'Singapore' },
-    { code: 'ID', name: 'Indonesia' },
-    { code: 'TH', name: 'Thailand' },
-    { code: 'VN', name: 'Vietnam' },
-    { code: 'PH', name: 'Philippines' },
-    { code: 'IN', name: 'India' },
-    { code: 'PK', name: 'Pakistan' },
-    { code: 'BD', name: 'Bangladesh' },
-    { code: 'LK', name: 'Sri Lanka' },
-    { code: 'KH', name: 'Cambodia' },
-    { code: 'LA', name: 'Laos' },
-    { code: 'MM', name: 'Myanmar' },
-    { code: 'BN', name: 'Brunei' }
-];
-
+// ... Remove the local 'countries' array since we imported it ...
 
 function MarketplacePage() {
+  // ... Keep existing state logic (searchTerm, selectedCountry, etc.) ...
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -67,7 +51,6 @@ function MarketplacePage() {
     queryFn: fetchListings,
   });
 
-  // ... Categories list ...
   const categories = [
     { value: '', label: 'All Categories' },
     { value: 'plastic', label: 'Plastic' },
@@ -103,7 +86,9 @@ function MarketplacePage() {
             </select>
             
             <select value={selectedCountry} onChange={(e) => setSelectedCountry(e.target.value)} className="filter-select">
-                {countries.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
+                <option value="">All Countries</option>
+                {/* Use imported COUNTRIES */}
+                {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
             </select>
         </div>
 
