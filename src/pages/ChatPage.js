@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
@@ -31,26 +31,22 @@ function ChatPage() {
   const [socket, setSocket] = useState(null);
   
   // Consolidated Chat List State
-  // We merge API data + any new partners from "Chat with Vendor" button
   const [extraChatPartners, setExtraChatPartners] = useState([]); 
   
   const [listingContext, setListingContext] = useState(null);
   
-  const messagesEndRef = useRef(null);
+  // FIX 1: Ref attached to the container, not a dummy div
+  const chatContainerRef = useRef(null);
   const queryClient = useQueryClient();
 
   // 1. Load Initial Conversations
-  // REMOVED onSuccess. We rely on the returned 'data' directly.
   const { data: apiConversations = [], isLoading: loadingConversations } = useQuery({
     queryKey: ['conversations'],
     queryFn: fetchConversations,
   });
 
-  // Merge API conversations with any locally added partners (e.g. from "Chat" button)
-  // Filter out duplicates
   const allChatPartners = React.useMemo(() => {
       const combined = [...apiConversations, ...extraChatPartners];
-      // Deduplicate by ID
       const unique = [];
       const map = new Map();
       for (const item of combined) {
@@ -74,13 +70,11 @@ function ChatPage() {
             setMessageInput(`Hi, I'm interested in your listing: ${location.state.listingContext.title}`);
         }
 
-        // Check if vendor is already in our list (string comparison for safety)
         const existingPartner = allChatPartners.find(u => String(u.id) === String(vendorId));
         
         if (existingPartner) {
           setSelectedUser(existingPartner);
         } else {
-          // Not in list? Fetch and add to extraChatPartners
           try {
             const newPartner = await fetchUserDetails(vendorId);
             setExtraChatPartners(prev => [...prev, newPartner]);
@@ -93,7 +87,6 @@ function ChatPage() {
       } 
     };
 
-    // Run if we have a request to start a chat
     if (location.state?.startChatWith) {
        initChat();
     }
@@ -123,9 +116,7 @@ function ChatPage() {
       const data = JSON.parse(event.data);
       setRealtimeMessages((prev) => [...prev, data]);
       
-      // Check if this message is from a NEW user not in our list
       const otherUserId = String(data.sender_id) === String(currentUser.id) ? data.receiver_id : data.sender_id;
-      
       const alreadyInList = allChatPartners.some(u => String(u.id) === String(otherUserId));
       
       if (!alreadyInList) {
@@ -138,14 +129,23 @@ function ChatPage() {
     newSocket.onclose = () => console.log('WebSocket Disconnected');
     setSocket(newSocket);
     return () => newSocket.close();
-  }, [currentUser, allChatPartners]); // Added dependency to check list properly
+  }, [currentUser, allChatPartners]);
 
   useEffect(() => {
     setRealtimeMessages([]);
   }, [selectedUser]);
 
+  // FIX 2: Use useLayoutEffect or useEffect to scroll container
+  // This prevents the "whole page" jump by only modifying the container's scroll position
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatContainerRef.current) {
+        const scrollHeight = chatContainerRef.current.scrollHeight;
+        const height = chatContainerRef.current.clientHeight;
+        const maxScrollTop = scrollHeight - height;
+        
+        // Only scroll if we are near bottom or it's initial load (simple version: always scroll to bottom on new message)
+        chatContainerRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+    }
   }, [historyMessages, realtimeMessages, selectedUser]);
 
 
@@ -162,7 +162,6 @@ function ChatPage() {
     setMessageInput('');
     setListingContext(null); 
     
-    // Invalidate query to refresh the main list if needed (though WebSocket handles new users mostly)
     setTimeout(() => {
         queryClient.invalidateQueries(['conversations']);
     }, 1000);
@@ -211,7 +210,8 @@ function ChatPage() {
               Chatting with {selectedUser.username}
             </div>
             
-            <div className="chat-messages">
+            {/* FIX 3: Attached ref to this scrolling container */}
+            <div className="chat-messages" ref={chatContainerRef}>
               {listingContext && (
                   <div className="listing-context-bubble">
                       <div className="context-title">Inquiry: {listingContext.title}</div>
@@ -229,7 +229,7 @@ function ChatPage() {
                   </div>
                 );
               })}
-              <div ref={messagesEndRef} />
+              {/* Removed the dummy ref div */}
             </div>
             <form onSubmit={handleSendMessage} className="message-input-form">
               <input type="text" className="message-input" placeholder="Type a message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
