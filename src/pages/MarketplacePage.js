@@ -8,11 +8,16 @@ import './MarketplacePage.css';
 const fetchListings = async ({ queryKey }) => {
   const [_, filters] = queryKey;
   const params = new URLSearchParams();
+  
+  // Only append parameters if they have a value
   if (filters.search) params.append('search', filters.search);
   if (filters.category) params.append('category', filters.category);
   if (filters.country) params.append('country', filters.country);
   if (filters.city) params.append('city', filters.city);
   if (filters.sort) params.append('ordering', filters.sort);
+
+  // Debugging: Log the URL being called to check params
+  console.log("Fetching listings with params:", params.toString());
 
   const { data } = await api.get(`/listings/?${params.toString()}`);
   return data;
@@ -27,17 +32,19 @@ function MarketplacePage() {
   const [debouncedCity, setDebouncedCity] = useState('');
   const [selectedSort, setSelectedSort] = useState('-created_at');
 
+  // Debounce Search Input
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchTerm), 500);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+  // Debounce City Input
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedCity(cityFilter), 500);
     return () => clearTimeout(timer);
   }, [cityFilter]);
 
-  const { data: listings, isLoading } = useQuery({
+  const { data: listings, isLoading, isError, refetch } = useQuery({
     queryKey: ['listings', { 
         search: debouncedSearch, 
         category: selectedCategory, 
@@ -46,6 +53,7 @@ function MarketplacePage() {
         sort: selectedSort 
     }],
     queryFn: fetchListings,
+    keepPreviousData: true, // Keeps list visible while loading new filter results
   });
 
   const categories = [
@@ -63,6 +71,14 @@ function MarketplacePage() {
     { value: '-price_per_unit', label: 'Price: High to Low' },
   ];
 
+  const handleClearFilters = () => {
+      setSearchTerm('');
+      setSelectedCategory('');
+      setSelectedCountry('');
+      setCityFilter('');
+      setSelectedSort('-created_at');
+  };
+
   return (
     <div className="marketplace-container">
       <header className="marketplace-header">
@@ -73,7 +89,13 @@ function MarketplacePage() {
       <div className="filters-container">
         {/* Search */}
         <div className="search-box">
-          <input type="text" placeholder="Search..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="filter-input" />
+          <input 
+            type="text" 
+            placeholder="Search materials..." 
+            value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)} 
+            className="filter-input" 
+          />
         </div>
 
         {/* Dropdowns Row 1 */}
@@ -84,7 +106,6 @@ function MarketplacePage() {
             
             <select value={selectedCountry} onChange={(e) => setSelectedCountry(e.target.value)} className="filter-select">
                 <option value="">All Countries</option>
-                {/* FIX: Used COUNTRIES (uppercase) to match the import */}
                 {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
             </select>
         </div>
@@ -103,16 +124,28 @@ function MarketplacePage() {
             <select value={selectedSort} onChange={(e) => setSelectedSort(e.target.value)} className="filter-select">
                 {sortOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
             </select>
+
+            {(selectedCategory || selectedCountry || cityFilter || searchTerm) && (
+                <button onClick={handleClearFilters} className="clear-filters-btn">
+                    Clear Filters
+                </button>
+            )}
         </div>
       </div>
 
       {/* Results Grid */}
-      {isLoading ? <div className="loading-text">Loading...</div> : 
+      {isLoading ? <div className="loading-text">Loading listings...</div> : 
+       isError ? <div className="error-text">Something went wrong. Please try again.</div> :
        listings?.length > 0 ? (
         <div className="listings-grid">
           {listings.map(listing => <ListingCard key={listing.id} listing={listing} />)}
         </div>
-      ) : <div className="no-listings-container"><p>No listings found.</p></div>}
+      ) : (
+        <div className="no-listings-container">
+            <p className="no-listings-text">No listings match your criteria.</p>
+            <button onClick={handleClearFilters} className="clear-filters-btn">View All Items</button>
+        </div>
+      )}
     </div>
   );
 }
