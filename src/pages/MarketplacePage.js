@@ -2,22 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../services/api';
 import ListingCard from '../components/ListingCard';
-import { COUNTRIES } from '../utils/countries'; // Imported as COUNTRIES
+import { COUNTRIES } from '../utils/countries'; 
 import './MarketplacePage.css';
 
 const fetchListings = async ({ queryKey }) => {
   const [_, filters] = queryKey;
   const params = new URLSearchParams();
   
-  // Only append parameters if they have a value
   if (filters.search) params.append('search', filters.search);
   if (filters.category) params.append('category', filters.category);
   if (filters.country) params.append('country', filters.country);
   if (filters.city) params.append('city', filters.city);
   if (filters.sort) params.append('ordering', filters.sort);
 
-  // Debugging: Log the URL being called to check params
-  console.log("Fetching listings with params:", params.toString());
+  console.log("Fetching URL:", `/listings/?${params.toString()}`); // Debugging
 
   const { data } = await api.get(`/listings/?${params.toString()}`);
   return data;
@@ -32,19 +30,17 @@ function MarketplacePage() {
   const [debouncedCity, setDebouncedCity] = useState('');
   const [selectedSort, setSelectedSort] = useState('-created_at');
 
-  // Debounce Search Input
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchTerm), 500);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Debounce City Input
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedCity(cityFilter), 500);
     return () => clearTimeout(timer);
   }, [cityFilter]);
 
-  const { data: listings, isLoading, isError, refetch } = useQuery({
+  const { data: listings, isLoading, isError } = useQuery({
     queryKey: ['listings', { 
         search: debouncedSearch, 
         category: selectedCategory, 
@@ -53,7 +49,7 @@ function MarketplacePage() {
         sort: selectedSort 
     }],
     queryFn: fetchListings,
-    keepPreviousData: true, // Keeps list visible while loading new filter results
+    keepPreviousData: true, 
   });
 
   const categories = [
@@ -87,7 +83,6 @@ function MarketplacePage() {
       </header>
       
       <div className="filters-container">
-        {/* Search */}
         <div className="search-box">
           <input 
             type="text" 
@@ -98,7 +93,6 @@ function MarketplacePage() {
           />
         </div>
 
-        {/* Dropdowns Row 1 */}
         <div className="dropdowns-wrapper">
             <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="filter-select">
                 {categories.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
@@ -110,7 +104,6 @@ function MarketplacePage() {
             </select>
         </div>
 
-         {/* Dropdowns Row 2 */}
          <div className="dropdowns-wrapper">
             <input 
                 type="text" 
@@ -133,9 +126,8 @@ function MarketplacePage() {
         </div>
       </div>
 
-      {/* Results Grid */}
       {isLoading ? <div className="loading-text">Loading listings...</div> : 
-       isError ? <div className="error-text">Something went wrong. Please try again.</div> :
+       isError ? <div className="error-text">Something went wrong.</div> :
        listings?.length > 0 ? (
         <div className="listings-grid">
           {listings.map(listing => <ListingCard key={listing.id} listing={listing} />)}
