@@ -83,8 +83,8 @@
 /* --- Icon Buttons --- */
 .nav-icon-btn {
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: 44px; /* Slightly smaller for modern look */
+  height: 44px;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -98,23 +98,16 @@
 .nav-icon-btn:hover {
   background: #f0fdf4;
   color: #10b981;
-  border-color: #dcfce7;
 }
 
-.nav-svg {
-  width: 24px;
-  height: 24px;
-  stroke-width: 2px;
-}
-
-/* Notification Badge */
+/* Updated Notification Badge Logic */
 .nav-badge {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: -2px; /* Moved slightly higher */
+  right: -2px; /* Moved slightly right */
   background: #ef4444;
   color: white;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   min-width: 18px;
   height: 18px;
@@ -122,7 +115,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid white;
+  border: 2px solid #ffffff; /* White border to separate from icon */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 10; /* Ensure it sits on top */
 }
 
 /* --- User Dropdown --- */

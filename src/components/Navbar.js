@@ -12,8 +12,8 @@ function Navbar() {
   const location = useLocation();
 
   // Mock Counters (Replace with real data from context/API if available)
-  const messageCount = 0; 
-  const orderCount = 0;
+  const messageCount = 2; 
+  const orderCount = 5;
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -75,18 +75,22 @@ function Navbar() {
         <div className="nav-right">
           {user ? (
             <>
-              {/* Message Icon */}
+              {/* Message Icon (Chat Bubble) */}
               <Link to="/chat" className="nav-icon-btn" title="Messages">
-                <svg className="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                {/* Modern Chat Icon */}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
                 {messageCount > 0 && <span className="nav-badge">{messageCount}</span>}
               </Link>
 
-              {/* Orders Icon */}
+              {/* Orders Icon (Package Box) */}
               <Link to="/orders" className="nav-icon-btn" title="My Orders">
-                <svg className="nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                {/* Modern Package Icon */}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
                 </svg>
                 {orderCount > 0 && <span className="nav-badge">{orderCount}</span>}
               </Link>
