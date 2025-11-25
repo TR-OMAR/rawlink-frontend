@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import api from '../services/api';
 
 const AuthContext = createContext();
@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // ---------------------- Fetch User Data from Token & API ----------------------
   const fetchUserData = async () => {
     try {
       const token = localStorage.getItem('access_token');
@@ -15,17 +16,18 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         return;
       }
-      
+
       const decoded = jwtDecode(token);
-      
-      // Check expiration safely
+
+      // Token expiration check
       if (decoded.exp * 1000 < Date.now()) {
-         console.warn("Token expired");
-         logout();
-         setLoading(false);
-         return;
+        console.warn("Token expired");
+        logout();
+        setLoading(false);
+        return;
       }
 
+      // Basic user info from JWT
       let userData = {
         id: decoded.user_id,
         email: decoded.email,
@@ -34,16 +36,18 @@ export const AuthProvider = ({ children }) => {
         displayName: decoded.username || 'User',
       };
 
+      // Try fetching additional profile data
       try {
         const { data: profileData } = await api.get('/profiles/me/');
         if (profileData.name && profileData.name.trim() !== '') {
-            userData.displayName = profileData.name;
+          userData.displayName = profileData.name;
         }
         userData = { ...userData, ...profileData };
       } catch (err) {
-        // Silent fail on profile fetch is okay, we keep the token data
+        // Silent fail is okay; keep JWT data
+        console.warn("Profile fetch failed:", err);
       }
-      
+
       setUser(userData);
     } catch (error) {
       console.error("Auth Init Error:", error);
@@ -56,6 +60,7 @@ export const AuthProvider = ({ children }) => {
     fetchUserData();
   }, []);
 
+  // ---------------------- Login ----------------------
   const login = async (email, password) => {
     try {
       const response = await api.post('/auth/jwt/create/', { email, password });
@@ -69,11 +74,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // ---------------------- Register ----------------------
   const register = async (email, username, password, role) => {
     await api.post('/auth/users/', { email, username, password, role });
     await login(email, password);
   };
 
+  // ---------------------- Logout ----------------------
   const logout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
@@ -81,7 +88,15 @@ export const AuthProvider = ({ children }) => {
     window.location.href = '/login';
   };
 
-  const value = { user, loading, login, register, logout, refreshUser: fetchUserData };
+  // ---------------------- Context Value ----------------------
+  const value = {
+    user,
+    loading,
+    login,
+    register,
+    logout,
+    refreshUser: fetchUserData,
+  };
 
   return (
     <AuthContext.Provider value={value}>
@@ -90,4 +105,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// hook for consuming AuthContext
 export const useAuth = () => useContext(AuthContext);

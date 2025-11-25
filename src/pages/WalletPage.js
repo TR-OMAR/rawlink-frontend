@@ -1,36 +1,39 @@
 import React from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'; // Import mutation hooks
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../services/api';
-import './WalletPage.css'; // Import the new CSS
+import './WalletPage.css';
 
-// --- Function to fetch wallet data (No Change) ---
+/**
+ * Fetch the current user's wallet data
+ */
 const fetchWallet = async () => {
   const { data } = await api.get('/wallets/me/');
   return data;
 };
 
-// --- NEW Function to add credit ---
+/**
+ * Add credit to the wallet
+ * @param {number} amount - Amount to add
+ */
 const addCredit = async (amount) => {
   const { data } = await api.post('/wallets/add-credit/', { amount });
   return data;
 };
 
 function WalletPage() {
-  const queryClient = useQueryClient(); // Get the query client
+  const queryClient = useQueryClient();
 
+  // Fetch wallet data
   const { data: wallet, isLoading, isError } = useQuery({
     queryKey: ['wallet'],
     queryFn: fetchWallet,
   });
 
-  // --- NEW Mutation for adding credit ---
+  // Mutation to add credit
   const addCreditMutation = useMutation({
     mutationFn: addCredit,
-    onSuccess: (updatedWallet) => {
-      // 1. Invalidate the 'wallet' query to force a re-fetch
-      queryClient.invalidateQueries(['wallet']);
-      // 2. Or, for a faster update, we can manually set the cache:
-      // queryClient.setQueryData(['wallet'], updatedWallet);
+    onSuccess: () => {
+      queryClient.invalidateQueries(['wallet']); // Refresh wallet data
     },
     onError: (error) => {
       console.error('Error adding credit:', error);
@@ -38,44 +41,46 @@ function WalletPage() {
     },
   });
 
-  // --- UPDATED: Handle the 'Add Credit' button ---
+  /**
+   * Prompt user for credit amount and trigger mutation
+   */
   const handleAddCredit = () => {
-    const amount = prompt("How much credit would you like to add? (e.g., 500)");
-    
-    if (!amount || isNaN(amount) || amount <= 0) {
-      alert("Please enter a valid, positive number.");
+    const input = prompt("Enter the amount of credit to add (e.g., 500):");
+
+    if (!input || isNaN(input) || parseFloat(input) <= 0) {
+      alert("Please enter a valid positive number.");
       return;
     }
-    
-    // Call the mutation
-    addCreditMutation.mutate(amount);
+
+    addCreditMutation.mutate(parseFloat(input));
   };
 
-  // Handle the 'Withdraw' button (non-functional for now)
+  /**
+   * Placeholder for withdraw functionality
+   */
   const handleWithdraw = () => {
-    alert("This feature is not yet implemented.");
+    alert("This feature is coming soon!");
   };
 
-  // --- Render section (No Change) ---
-  if (isLoading) {
-    return <div className="loading-text">Loading your wallet...</div>;
-  }
-
-  if (isError) {
-    return <div className="error-text">Error fetching wallet data.</div>;
-  }
+  // Loading or error states
+  if (isLoading) return <div className="loading-text">Loading your wallet...</div>;
+  if (isError) return <div className="error-text">Unable to load wallet data.</div>;
 
   return (
     <div className="wallet-container">
+      
+      {/* Header */}
       <header className="wallet-header">
         <h2>My Wallet</h2>
+        <p>Manage your balance and track all transactions here.</p>
       </header>
 
+      {/* Wallet Balance Card */}
       <div className="balance-card">
         <p className="balance-card-label">Current Balance</p>
-        <h1 className="balance-card-amount">
-          RM {parseFloat(wallet.balance).toFixed(2)}
-        </h1>
+        <h1 className="balance-card-amount">RM {parseFloat(wallet.balance).toFixed(2)}</h1>
+
+        {/* Wallet Actions */}
         <div className="wallet-actions">
           <button className="wallet-button button-withdraw" onClick={handleWithdraw}>
             Withdraw
@@ -90,9 +95,9 @@ function WalletPage() {
         </div>
       </div>
 
+      {/* Transaction History */}
       <div className="transaction-history">
         <h3>Transaction History</h3>
-        
         {wallet.transactions && wallet.transactions.length > 0 ? (
           <div className="transaction-list">
             {wallet.transactions.map(tx => (
@@ -100,19 +105,22 @@ function WalletPage() {
             ))}
           </div>
         ) : (
-          <p className="no-transactions-text">You have no transactions yet.</p>
+          <p className="no-transactions-text">
+            You have no transactions yet. Add credit to get started!
+          </p>
         )}
       </div>
     </div>
   );
 }
 
-// --- TransactionItem Component (No Change) ---
+/**
+ * Individual transaction item
+ */
 const TransactionItem = ({ transaction }) => {
   const { type, amount, timestamp } = transaction;
   const formattedDate = new Date(timestamp).toLocaleString();
   const isPositive = parseFloat(amount) >= 0;
-  const amountClass = isPositive ? 'amount-positive' : 'amount-negative';
 
   return (
     <div className="transaction-item">
@@ -120,11 +128,11 @@ const TransactionItem = ({ transaction }) => {
         <p className="transaction-type">{type}</p>
         <p className="transaction-date">{formattedDate}</p>
       </div>
-      <div className={`transaction-amount ${amountClass}`}>
+      <div className={`transaction-amount ${isPositive ? 'amount-positive' : 'amount-negative'}`}>
         {isPositive ? '+' : ''}RM {parseFloat(amount).toFixed(2)}
       </div>
     </div>
   );
-}
+};
 
 export default WalletPage;

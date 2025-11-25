@@ -4,12 +4,16 @@ import './SustainabilityPage.css';
 const SustainabilityPage = () => {
   return (
     <div className="sustainability-container">
+
+      {/* Page Header */}
       <header className="sus-header">
         <h1>Our Planet, Our Responsibility</h1>
-        <p>Tracking the environmental impact of every transaction on RawLink.</p>
+        <p>
+          At RawLink, we track the environmental impact of every transaction to ensure a sustainable future.
+        </p>
       </header>
 
-      {/* Impact Stats */}
+      {/* Environmental Impact Statistics */}
       <section className="impact-stats">
         <div className="stat-box green">
           <span className="stat-number">15,400 kg</span>
@@ -25,35 +29,40 @@ const SustainabilityPage = () => {
         </div>
       </section>
 
-      {/* Educational Section */}
+      {/* Educational Section: Circular Economy */}
       <section className="sus-content">
         <div className="sus-text">
-          <h2>The Circular Economy Approach</h2>
+          <h2>Embracing the Circular Economy</h2>
           <p>
-            The traditional "Take-Make-Dispose" model is destroying our planet. At RawLink, we champion the <strong>Circular Economy</strong>.
+            The traditional "Take-Make-Dispose" approach is harming our planet. RawLink promotes the <strong>Circular Economy</strong>, keeping materials in use for as long as possible.
           </p>
           <p>
-            By keeping materials in use, we reduce the need for extracting new raw resources. This saves energy, reduces pollution, and conserves our natural environment.
+            By extending the lifecycle of materials, we save energy, reduce pollution, and protect our natural resources for future generations.
           </p>
           <ul className="sus-list">
-            <li><strong>Reduce:</strong> Minimizing waste generation at the source.</li>
-            <li><strong>Reuse:</strong> Finding new purposes for industrial byproducts.</li>
-            <li><strong>Recycle:</strong> Processing materials to create new products.</li>
+            <li><strong>Reduce:</strong> Minimize waste generation from the start.</li>
+            <li><strong>Reuse:</strong> Give new life to industrial byproducts.</li>
+            <li><strong>Recycle:</strong> Transform used materials into new products.</li>
           </ul>
         </div>
+
+        {/* Infographic or Visual Section */}
         <div className="sus-image">
-           {/* You can replace this with an infographic later */}
-           <div className="infographic-placeholder">
-             ♻️ 
-           </div>
+          <div className="infographic-placeholder">
+            ♻️
+            <p>Visualizing Sustainability</p>
+          </div>
         </div>
       </section>
 
-      {/* Call to Action */}
+      {/* Call to Action Section */}
       <section className="sus-cta">
-        <h2>Join the Green Revolution</h2>
-        <p>Every kilogram of material you list or buy contributes to a cleaner Earth.</p>
+        <h2>Be Part of the Green Revolution</h2>
+        <p>
+          Every kilogram you buy, sell, or list on RawLink contributes to a cleaner, healthier planet. Let's make a difference together.
+        </p>
       </section>
+
     </div>
   );
 };

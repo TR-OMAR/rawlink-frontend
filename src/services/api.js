@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 // --- CONFIGURATION ---
-// Change this to your actual Render URL when deploying!
-// Example: const BASE_URL = 'https://rawlink-backend.onrender.com';
+
 export const BASE_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
 
 // --- AXIOS INSTANCE ---

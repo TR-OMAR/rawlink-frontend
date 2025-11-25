@@ -27,58 +27,90 @@ function RegisterPage() {
 
     try {
       await register(email, username, password, role);
-      navigate('/'); // <--- REDIRECT TO HOMEPAGE
+      navigate('/'); // Redirect to homepage
     } catch (err) {
-      if (err.response && err.response.data) {
-        const errorData = err.response.data;
-        const messages = Object.values(errorData).flat();
+      if (err.response?.data) {
+        const messages = Object.values(err.response.data).flat();
         setError(messages.join(' '));
       } else {
         setError('Failed to create an account. Please try again.');
       }
       console.error(err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
     <div className="auth-container">
+      {/* Logo */}
       <div className="auth-logo">RawLink</div>
+
       <h2>Create Your Account</h2>
+      <p className="auth-subtitle">Sign up to buy or sell sustainable materials</p>
+
+      {/* Registration Form */}
       <form onSubmit={handleSubmit} className="auth-form">
         {error && <p className="auth-error">{error}</p>}
+
         <div className="form-group">
-          <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <label>Email Address</label>
+          <input
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
+
         <div className="form-group">
-          <label>Username:</label>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          <label>Username</label>
+          <input
+            type="text"
+            placeholder="Choose a username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
         </div>
+
         <div className="form-group">
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <label>Password</label>
+          <input
+            type="password"
+            placeholder="At least 8 characters"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
+
         <div className="form-group">
           <label>I am a:</label>
           <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="buyer">Buyer (I want to buy materials)</option>
-            <option value="vendor">Vendor (I want to sell materials)</option>
+            <option value="buyer">Buyer – I want to buy materials</option>
+            <option value="vendor">Vendor – I want to sell materials</option>
           </select>
         </div>
+
         <button type="submit" disabled={loading} className="auth-button">
           {loading ? 'Registering...' : 'Create Account'}
         </button>
       </form>
-      
+
+      {/* Social Signup */}
       <div className="social-divider">or</div>
       <div className="social-buttons-container">
         <button className="social-button">
-            <svg viewBox="0 0 48 48" width="20px" height="20px"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.8 2.38 30.43 0 24 0 14.62 0 6.51 5.38 2.56 13.22l8.28 6.42C12.94 13.57 18.06 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v8.51h12.87c-.57 2.82-2.28 5.22-4.8 6.82l8.03 6.19C45.31 36.62 48 31.02 48 24c0-.66-.05-1.3-.15-1.94z"></path><path fill="#FBBC05" d="M10.84 28.64c-.28-.82-.44-1.69-.44-2.64s.16-1.82.44-2.64l-8.28-6.42C.96 18.25 0 21.01 0 24s.96 5.75 2.56 8.22l8.28-6.58z"></path><path fill="#34A853" d="M24 48c6.43 0 11.8-2.13 15.73-5.71l-8.03-6.19c-2.15 1.45-4.94 2.3-8.1 2.3-5.94 0-11.06-4.07-12.84-9.59l-8.28 6.42C6.51 42.62 14.62 48 24 48z"></path><path fill="none" d="M0 0h48v48H0z"></path></svg>
-            Sign up with Google
+          <span className="social-logo">RawLink</span> Sign up with RawLink
         </button>
       </div>
-      <Link to="/login" className="auth-link">Already have an account? Login</Link>
+
+      {/* Login Link */}
+      <p className="auth-link-text">
+        Already have an account? <Link to="/login" className="auth-link">Login here</Link>
+      </p>
     </div>
   );
 }

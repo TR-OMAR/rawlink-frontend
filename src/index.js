@@ -5,16 +5,21 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import App from './App';
 
-// Create a client for React Query
+// --- Initialize React Query client ---
+// Provides caching, background fetching, and more for API requests
 const queryClient = new QueryClient();
 
+// --- Create root element for React 18 ---
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// --- Render the application ---
 root.render(
   <React.StrictMode>
-    {/* Provides page routing to the whole app */}
+    {/* BrowserRouter enables client-side routing throughout the app */}
     <BrowserRouter>
-      {/* Provides data-fetching and caching to the whole app */}
+      {/* QueryClientProvider enables React Query for data fetching and caching */}
       <QueryClientProvider client={queryClient}>
+        {/* Main App component */}
         <App />
       </QueryClientProvider>
     </BrowserRouter>
