@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import './Auth.css';
+import googleLogo from '../assets/google.png';
+import appleLogo from '../assets/apple.png';
+import facebookLogo from '../assets/facebook.png';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -79,7 +82,7 @@ function LoginPage() {
           className="social-button social-google"
           onClick={() => handleSocialDemo('Google')}
         >
-          <img src="../assets/google.png" alt="Google" className="social-logo" />
+          <img src={googleLogo} alt="Google" className="social-logo" />
           <span className="social-text">Sign in with Google</span>
         </button>
 
@@ -88,7 +91,7 @@ function LoginPage() {
           className="social-button social-apple"
           onClick={() => handleSocialDemo('Apple')}
         >
-          <img src="../assets/apple.png" alt="Apple" className="social-logo" />
+          <img src={appleLogo} alt="Apple" className="social-logo" />
           <span className="social-text">Sign in with Apple</span>
         </button>
 
@@ -97,7 +100,7 @@ function LoginPage() {
           className="social-button social-facebook"
           onClick={() => handleSocialDemo('Facebook')}
         >
-          <img src="../assets/facebook.png" alt="Facebook" className="social-logo" />
+          <img src={facebookLogo} alt="Facebook" className="social-logo" />
           <span className="social-text">Sign in with Facebook</span>
         </button>
       </div>
