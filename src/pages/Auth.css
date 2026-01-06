@@ -51,6 +51,7 @@
   box-sizing: border-box;
 }
 
+/*login and sign up button styles*/
 .auth-button {
   width: 100%;
   padding: 14px;
@@ -58,7 +59,7 @@
   font-size: 1rem;
   font-weight: 600;
   color: white;
-  background-color: #9b5500; /*#007bff;*/
+  background-color: #007bff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -66,7 +67,7 @@
 }
 
 .auth-button:hover {
-  background-color:  #ce0606; /*#0056b3;*/
+  background-color: #0056b3;
 }
 
 .auth-button:disabled {
