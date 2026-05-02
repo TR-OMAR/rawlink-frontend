@@ -63,7 +63,7 @@ function Navbar() {
         {/* -------------------- CENTER: Main Links -------------------- */}
         <div className={`nav-center ${isMobileMenuOpen ? 'mobile-active' : ''}`}>
           <Link to="/" className="nav-link-main">Home</Link>
-          <Link to="/marketplace" className="nav-link-main nav-marketplace-btn">Marketplace</Link>
+          <Link to="/marketplace" className="nav-link-main">Marketplace</Link>
           <Link to="/about" className="nav-link-main">About Us</Link>
           <Link to="/sustainability" className="nav-link-main">Sustainability</Link>
           {user && <Link to="/sell" className="nav-link-main nav-sell-btn">SELL</Link>}
