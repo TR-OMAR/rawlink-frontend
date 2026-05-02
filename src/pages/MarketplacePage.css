@@ -114,6 +114,10 @@
   margin-bottom: 16px;
 }
 
+.marketplace-button:hover {
+  background-color: #218838;
+}
+
 .clear-filters-btn {
     background: transparent;
     border: 1px solid #10b981;
