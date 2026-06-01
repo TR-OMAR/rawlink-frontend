@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import api from '../services/api';
 
@@ -8,8 +8,16 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // ---------------------- Logout ----------------------
+  const logout = useCallback(() => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    setUser(null);
+    window.location.href = '/login';
+  }, []);
+
   // ---------------------- Fetch User Data from Token & API ----------------------
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       const token = localStorage.getItem('access_token');
       if (!token) {
@@ -54,7 +62,7 @@ export const AuthProvider = ({ children }) => {
       logout();
     }
     setLoading(false);
-  };
+  }, [logout]);
 
   useEffect(() => {
     fetchUserData();
@@ -78,14 +86,6 @@ export const AuthProvider = ({ children }) => {
   const register = async (email, username, password, role) => {
     await api.post('/auth/users/', { email, username, password, role });
     await login(email, password);
-  };
-
-  // ---------------------- Logout ----------------------
-  const logout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    setUser(null);
-    window.location.href = '/login';
   };
 
   // ---------------------- Context Value ----------------------

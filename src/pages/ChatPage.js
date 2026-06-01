@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import api, { BASE_URL } from '../services/api';
@@ -26,7 +26,6 @@ const fetchChatHistory = async (userId) => {
 function ChatPage() {
   const { user: currentUser } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const [selectedUser, setSelectedUser] = useState(null);
