@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 function Navbar() {
@@ -64,7 +63,7 @@ function Navbar() {
         {/* -------------------- CENTER: Main Links -------------------- */}
         <div className={`nav-center ${isMobileMenuOpen ? 'mobile-active' : ''}`}>
           <Link to="/" className="nav-link-main">Home</Link>
-          <Link to="/marketplace" className="nav-link-main nav-mark-btn">Marketplace</Link>
+          <Link to="/marketplace" className="nav-link-main">Marketplace</Link>
           <Link to="/about" className="nav-link-main">About Us</Link>
           <Link to="/sustainability" className="nav-link-main">Sustainability</Link>
           {user && <Link to="/sell" className="nav-link-main nav-sell-btn">SELL</Link>}
