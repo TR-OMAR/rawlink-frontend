@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 function Navbar() {
