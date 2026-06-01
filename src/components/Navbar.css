@@ -53,6 +53,22 @@
 }
 .nav-link-main:hover { color: #10b981; }
 
+.nav-mark-btn {
+  background: linear-gradient(135deg, #4b29d3 0%, #7b57f1 100%);
+  color: white !important;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nav-mark-btn:hover { 
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(183, 123, 224, 0.3);
+}
+
+
 .nav-sell-btn {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white !important;
