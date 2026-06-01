@@ -231,35 +231,38 @@
 .nav-marketplace-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  color: #64748b;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 50px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  color: #334155 !important;
+  font-weight: 600;
+  font-size: 0.95rem;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
 }
 
 .nav-marketplace-btn:hover {
   background: #ecfdf5;
-  border-color: #a7f3d0;
-  color: #10b981;
+  border-color: #10b981;
+  color: #059669 !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.08);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
 }
 
 .nav-marketplace-icon {
-  transition: transform 0.25s ease;
+  color: #64748b;
+  transition: transform 0.25s ease, color 0.25s ease;
 }
 
 .nav-marketplace-btn:hover .nav-marketplace-icon {
-  transform: scale(1.1);
+  transform: scale(1.1) rotate(5deg);
+  color: #10b981;
 }
 
 .nav-marketplace-text {
-  display: none; /* Hide text on desktop */
+  display: inline;
 }
 
 /* Mobile Responsive */
@@ -294,13 +297,20 @@
     border: none;
     padding: 0;
     justify-content: flex-start;
-    color: #64748b;
+    color: #64748b !important;
     gap: 12px;
   }
   .nav-marketplace-btn:hover {
     background: transparent;
-    color: #10b981;
+    color: #10b981 !important;
     box-shadow: none;
+    transform: none;
+  }
+  .nav-marketplace-icon {
+    color: inherit;
+  }
+  .nav-marketplace-btn:hover .nav-marketplace-icon {
+    color: inherit;
     transform: none;
   }
   .nav-marketplace-text {
