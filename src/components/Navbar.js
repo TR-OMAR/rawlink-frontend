@@ -63,7 +63,16 @@ function Navbar() {
         {/* -------------------- CENTER: Main Links -------------------- */}
         <div className={`nav-center ${isMobileMenuOpen ? 'mobile-active' : ''}`}>
           <Link to="/" className="nav-link-main">Home</Link>
-          <Link to="/marketplace" className="nav-link-main">Marketplace</Link>
+          <Link to="/marketplace" className="nav-marketplace-btn" title="Marketplace">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="nav-marketplace-icon">
+              <path d="m2 7 4.41-3.67A2 2 0 0 1 7.73 3h8.54a2 2 0 0 1 1.32.33L22 7" />
+              <path d="M4 12V9a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3" />
+              <path d="M20 15a2 2 0 0 0 2-2V7H2v6a2 2 0 0 0 2 2" />
+              <path d="M20 15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2" />
+              <path d="M9 22V17h6v5" />
+            </svg>
+            <span className="nav-marketplace-text">Marketplace</span>
+          </Link>
           <Link to="/about" className="nav-link-main">About Us</Link>
           <Link to="/sustainability" className="nav-link-main">Sustainability</Link>
           {user && <Link to="/sell" className="nav-link-main nav-sell-btn">SELL</Link>}
