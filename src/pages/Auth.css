@@ -59,7 +59,7 @@
   font-size: 1rem;
   font-weight: 600;
   color: white;
-  background-color: #cb08d9;
+  background-color: #236ff0;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -67,7 +67,7 @@
 }
 
 .auth-button:hover {
-  background-color:  #d80e33; 
+  background-color:  #3048be; 
 }
 
 .auth-button:disabled {
