@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [fetchUserData]);
 
   // ---------------------- Login ----------------------
   const login = async (email, password) => {
